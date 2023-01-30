@@ -1,5 +1,13 @@
 package org.tron.p2p.example;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.tron.p2p.P2pConfig;
 import org.tron.p2p.P2pEventHandler;
@@ -10,11 +18,6 @@ import org.tron.p2p.exception.P2pException;
 import org.tron.p2p.stats.P2pStats;
 import org.tron.p2p.utils.ByteArray;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class ImportUsing {
 
   private P2pService p2pService = new P2pService();
@@ -24,9 +27,6 @@ public class ImportUsing {
     // config p2p parameters
     P2pConfig config = new P2pConfig();
     initConfig(config);
-
-    //if you use dns discovery, you can use following config
-    initConfig2(config);
 
     // register p2p event handler
     MyP2pEventHandler myP2pEventHandler = new MyP2pEventHandler();
@@ -94,10 +94,8 @@ public class ImportUsing {
     // set discover seed nodes
     List<InetSocketAddress> seedNodeList = new ArrayList<>();
     seedNodeList.add(new InetSocketAddress("13.124.62.58", 18888));
-    seedNodeList.add(new InetSocketAddress("18.196.99.16", 18888));
-    seedNodeList.add(new InetSocketAddress("35.180.51.163", 18888));
-    seedNodeList.add(new InetSocketAddress("34.253.187.192", 18888));
-    seedNodeList.add(new InetSocketAddress("52.53.189.99", 18888));
+    seedNodeList.add(new InetSocketAddress("2600:1f13:908:1b00:e1fd:5a84:251c:a32a", 18888));
+    seedNodeList.add(new InetSocketAddress("127.0.0.4", 18888));
     config.setSeedNodes(seedNodeList);
 
     // set active nodes
@@ -124,14 +122,7 @@ public class ImportUsing {
     config.setMaxConnectionsWithSameIp(2);
   }
 
-  private void initConfig2(P2pConfig config) {
-    config.setDiscoverEnable(false);
-    String[] urls = new String[] {
-        "tree://APFGGTFOBVE2ZNAB3CSMNNX6RRK3ODIRLP2AA5U4YFAA6MSYZUYTQ@nodes.example.org"};
-    config.setTreeUrls(Arrays.asList(urls));
-  }
-
-  public class MyP2pEventHandler extends P2pEventHandler {
+  private class MyP2pEventHandler extends P2pEventHandler {
 
     public MyP2pEventHandler() {
       this.messageTypes = new HashSet<>();
@@ -164,7 +155,7 @@ public class ImportUsing {
 
   }
 
-  public enum MessageTypes {
+  private enum MessageTypes {
 
     FIRST((byte) 0x00),
 
@@ -195,7 +186,7 @@ public class ImportUsing {
     }
   }
 
-  public class TestMessage {
+  private static class TestMessage {
 
     protected MessageTypes type;
     protected byte[] data;
